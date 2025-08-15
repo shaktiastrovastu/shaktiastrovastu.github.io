@@ -62,9 +62,32 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: #ffd700;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            /* ADD YOUR PNG LOGO HERE */
+            /* Replace 'your-repo-name' with your actual GitHub repository name */
+            /* Replace 'logo.png' with your actual logo filename */
+            background-image: url('https://raw.githubusercontent.com/shaktiastrovastu/shaktiastrovastu.github.io/main/assets/logo.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 8px;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes logoGlow {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
         }
 
         .nav-links {
@@ -98,6 +121,46 @@
             max-width: 800px;
             padding: 2rem;
             animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            background-image: url('https://raw.githubusercontent.com/shaktiastrovastu/shaktiastrovastu.github.io/main/assets/logo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 20px;
+            animation: heroLogoFloat 4s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.6);
+        }
+
+        .hero-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transform: rotate(0deg);
+            animation: logoShine 3s linear infinite;
+        }
+
+        @keyframes heroLogoFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(0px) rotate(0deg); }
+            75% { transform: translateY(-5px) rotate(-2deg); }
+        }
+
+        @keyframes logoShine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .hero h1 {
@@ -378,7 +441,10 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">✨ SHAKTI ASTRO VASTU</div>
+            <div class="logo">
+                <div class="logo-img"></div>
+                <span>SHAKTI ASTRO VASTU</span>
+            </div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -391,6 +457,7 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
+            <div class="hero-logo"></div>
             <h1>SHAKTI ASTRO VASTU</h1>
             <p class="subtitle">THE SCIENCE OF ALIGNED ENERGIES</p>
             <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #d0d0d0;">
