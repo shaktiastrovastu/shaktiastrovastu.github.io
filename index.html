@@ -11,11 +11,18 @@
             box-sizing: border-box;
         }
 
+        /* CSS variable for header height (fallback to 72px) */
+        :root {
+          --header-height: 72px;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             color: white;
             overflow-x: hidden;
+            /* reserve space for the fixed header (includes iOS safe-area) */
+            padding-top: calc(var(--header-height) + env(safe-area-inset-top));
         }
 
         /* Animated background stars */
@@ -48,17 +55,22 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 1rem 2rem;
+            /* use the CSS variable for height so JS can sync it */
+            height: var(--header-height);
+            padding: 0 2rem; /* keep horizontal padding */
             background: rgba(26, 26, 46, 0.9);
             backdrop-filter: blur(10px);
             z-index: 1000;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
         }
 
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
         }
 
         .logo {
@@ -108,7 +120,8 @@
 
         /* Hero Section */
         .hero {
-            height: 100vh;
+            /* ensure hero fills viewport minus header */
+            min-height: calc(100vh - var(--header-height));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -132,7 +145,7 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 20px;
-            animation: heroLogoFloat 4s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
+/*             animation: heroLogoFloat 4s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate; */
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
@@ -417,6 +430,16 @@
             }
         }
 
+        /* make in-page anchor targets land below the header */
+        section, .hero-content, .about, .services, .contact {
+          scroll-margin-top: calc(var(--header-height) + 12px);
+        }
+
+        /* small responsive tweak: reduce header height on tiny screens */
+        @media (max-width: 480px) {
+          :root { --header-height: 64px; }
+        }
+
         /* Floating particles */
         .particle {
             position: fixed;
@@ -648,6 +671,8 @@
             createStars();
             animateOnScroll();
             createFloatingParticles();
+            // sync header height once DOM is ready
+            syncHeaderHeight();
         });
 
         // Add mouse movement effect to hero section
@@ -657,6 +682,25 @@
             const y = e.clientY / window.innerHeight;
             hero.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255, 215, 0, 0.1), transparent 70%)`;
         });
+
+        // keep --header-height synced to the actual header height (handles font scaling / device differences)
+        function syncHeaderHeight() {
+          const header = document.querySelector('header');
+          if (!header) return;
+          const h = header.offsetHeight;
+          document.documentElement.style.setProperty('--header-height', h + 'px');
+          // ensure body padding also accounts for iOS safe-area
+          document.body.style.paddingTop = `calc(${h}px + env(safe-area-inset-top))`;
+        }
+
+        // run on load and resize (debounce for performance)
+        let _syncTimer;
+        window.addEventListener('load', () => { syncHeaderHeight(); });
+        window.addEventListener('resize', () => {
+          clearTimeout(_syncTimer);
+          _syncTimer = setTimeout(syncHeaderHeight, 100);
+        });
     </script>
 </body>
 </html>
+
