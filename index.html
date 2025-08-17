@@ -283,11 +283,33 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::after {
+            content: '→ Get Consultation';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            color: white;
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: bottom 0.3s ease;
         }
 
         .service-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .service-card:hover::after {
+            bottom: 0;
         }
 
         .service-icon {
@@ -304,6 +326,7 @@
         .service-card p {
             color: #d0d0d0;
             line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
 
         /* Interactive Zodiac Wheel */
@@ -455,6 +478,24 @@
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
+
+        /* Contact highlight animation */
+        .contact-highlight {
+            animation: highlightPulse 2s ease-in-out 3;
+            border: 2px solid #ffd700 !important;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5) !important;
+        }
+
+        @keyframes highlightPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% { 
+                transform: scale(1.02);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+            }
+        }
     </style>
 </head>
 <body>
@@ -511,22 +552,22 @@
     <section class="services" id="services">
         <h2>Our Sacred Services</h2>
         <div class="services-grid">
-            <div class="service-card">
+            <div class="service-card" onclick="scrollToContact()">
                 <div class="service-icon">🏠</div>
                 <h3>Align Your Living Space</h3>
                 <p>Harmonize your home with your ruling planets for optimal energy flow and prosperity.</p>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="scrollToContact()">
                 <div class="service-icon">💫</div>
                 <h3>Boost Life Aspects</h3>
                 <p>Enhance health, career, relationships & finances through strategic space alignment.</p>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="scrollToContact()">
                 <div class="service-icon">🔮</div>
                 <h3>Remove Vastu Doshas</h3>
                 <p>Eliminate negative energies using powerful astrological remedies and corrections.</p>
             </div>
-            <div class="service-card">
+            <div class="service-card" onclick="scrollToContact()">
                 <div class="service-icon">🏗️</div>
                 <h3>New Home Planning</h3>
                 <p>Perfect for new construction, renovations, and space corrections based on your chart.</p>
@@ -599,6 +640,31 @@
                 }
             });
         });
+
+        // Scroll to contact section with highlight effect
+        function scrollToContact() {
+            const contactSection = document.querySelector('#contact');
+            const contactItems = document.querySelectorAll('.contact-item');
+            
+            // Scroll to contact section
+            contactSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // Highlight contact items after scrolling
+            setTimeout(() => {
+                contactItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('contact-highlight');
+                        // Remove highlight after animation
+                        setTimeout(() => {
+                            item.classList.remove('contact-highlight');
+                        }, 6000);
+                    }, index * 200);
+                });
+            }, 1000);
+        }
 
         // Zodiac wheel interaction
         function showZodiacMessage() {
